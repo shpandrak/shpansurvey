@@ -1,0 +1,12 @@
+<h1>{{survey.name}}</h1>
+<button ng-click="">Edit</button>
+<p>By {{survey.creator}}</p>
+
+<div ng-repeat="question in survey.questions">
+  {{question.text}}<br/>
+    <b>Answers</b><br/>
+    <ol>
+      <li ng-repeat="answer in question.answers">{{answer.text}}</li>
+    </ol>
+</div>
+

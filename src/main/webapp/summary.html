@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ShpanSurvay</title>
+    <script src="js/shpansurvey.js"></script>
+    <script>
+
+        function bodyOnLoad(){
+
+            var id = window.location.hash.substr(1);
+            var request = new XMLHttpRequest();
+            request.open('GET', '/rest/survey/' + id, true);
+
+            request.onload = function() {
+                if (request.status >= 200 && request.status < 400){
+                    // Success!
+                    var survey = JSON.parse(request.responseText);
+
+                    var summaryRequest = new XMLHttpRequest();
+                    summaryRequest.open('GET', '/rest/survey/' + id + '/results', true);
+                    summaryRequest.onload = function() {
+                        var summary = new SurveySummary(JSON.parse(summaryRequest.responseText));
+                        //alert(JSON.stringify(summary));
+                        new SurveySummaryManager(survey, summary, document.getElementById('summaryDiv')).draw();
+
+
+                    }
+                    summaryRequest.send();
+
+
+                } else {
+                    // We reached our target server, but it returned an error
+
+                }
+            };
+
+            request.onerror = function() {
+                // There was a connection error of some sort
+            };
+
+            request.send();
+        }
+    </script>
+    <link href="css/main.css" rel="stylesheet"/>
+    <style>
+    </style>
+</head>
+<body onload="bodyOnLoad()">
+
+<div class="wrap">
+    <h1 style="text-align:center">Summary</h1>
+
+    <div id="summaryDiv">
+    </div>
+
+    <div class="links" id="botOut">
+    </div>
+</div>
+
+</body>
+</html>

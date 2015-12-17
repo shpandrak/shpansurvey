@@ -1,0 +1,32 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2">
+      <!--Sidebar content-->
+
+      Search: <input ng-model="query">
+      Sort by:
+      <select ng-model="orderProp">
+        <option value="name">Alphabetical</option>
+        <option value="age">Newest</option>
+      </select>
+
+
+    </div>
+    <div class="col-md-10">
+      <a href="#/newSurvey">Create New</a>
+      <!--Body content-->
+      <ul class="phones">
+        <li ng-repeat="survey in surveys | filter:query | orderBy:orderProp"
+            class="thumbnail phone-listing">
+          <a href="#/survey/{{survey.id}}">{{survey.name}}</a> By
+          <a href="mailto:{{survey.creator}}">{{survey.creator}}</a>
+          <p>With {{survey.questions.length}} questions</p>
+          <a href="/survey.html#{{survey.id}}">Go vote</a>
+          <a href="/summary.html#{{survey.id}}">See Summary</a>
+
+        </li>
+      </ul>
+
+    </div>
+  </div>
+</div>

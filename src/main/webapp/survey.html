@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ShpanSurvay</title>
+    <script src="js/shpansurvey.js"></script>
+    <script>
+
+        function sendResults(surveyId, results){
+            document.getElementById('botOut').style.pointerEvents = 'none';
+            var request = new XMLHttpRequest();
+            request.open('POST', '/rest/survey/' + surveyId + '/results', true);
+            request.setRequestHeader('Content-Type', 'application/json');
+            request.onreadystatechange = function(){
+                if (request.readyState==4){
+                    //todo: check request status... blabla
+                    window.location.replace("summary.html#" + surveyId);
+                }
+            };
+            request.send(JSON.stringify({answers:results}));
+        }
+
+        function bodyOnLoad(){
+
+            var id = window.location.hash.substr(1);
+            var request = new XMLHttpRequest();
+            request.open('GET', '/rest/survey/' + id, true);
+
+            request.onload = function() {
+                if (request.status >= 200 && request.status < 400){
+                    // Success!
+                    var survey = JSON.parse(request.responseText);
+                    new SurveyManager(
+                            survey,
+                            document.getElementById('surveyTitle'),
+                            document.getElementById('shpanType'),
+                            document.getElementById('botOut'),
+                            function(results){sendResults(id, results)}
+                    ).run();
+
+                } else {
+                    alert('error reading survey ' + request.responseText)
+
+                }
+            };
+
+            request.onerror = function() {
+                // There was a connection error of some sort
+                alert('error reading survey ' + request.responseText)
+            };
+
+            request.send();
+
+        }
+    </script>
+    <link href="css/main.css" rel="stylesheet"/>
+    <style>
+    </style>
+</head>
+<body onload="bodyOnLoad()">
+
+<div class="wrap">
+    <h1 id="surveyTitle" style="text-align:center"></h1>
+
+    <div class="type-wrap">
+        <span id="shpanType" style="white-space:pre-line;">&nbsp;</span>
+        <span class="typed-cursor">|</span>
+    </div>
+
+    <div class="links" id="botOut">
+    </div>
+</div>
+
+</body>
+</html>

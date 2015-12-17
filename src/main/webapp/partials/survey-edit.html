@@ -1,0 +1,21 @@
+<h1><input type="text" ng-model="survey.name" autofocus="true"/></h1>
+<p>By <input type="text" ng-model="survey.creator"/></p>
+
+<div ng-repeat="question in survey.questions">
+  <input type="text" ng-model="question.text"/><br/>
+    <b>Answers</b><br/>
+    <ol>
+      <li ng-repeat="answer in question.answers">
+        <input type="text" ng-model="answer.text"/><button ng-click="question.answers.splice($index,1)">Remove</button>
+      </li>
+      <li><button ng-click="question.answers.push({'id':question.answers.length + 1, 'text':'Option ' + (question.answers.length + 1)})">Add Option</button></li>
+    </ol>
+  <button ng-click="survey.questions.push({'id':survey.questions.length + 1, 'text':'Question' + (survey.questions.length + 1), 'answers':[]});">Add Question</button>
+  <br/>
+  <br/>
+  <br/>
+
+</div>
+<p>
+  <button ng-click="saveSurvey();">Save</button>
+</p>
